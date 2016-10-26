@@ -1,0 +1,20 @@
+#!/bin/bash
+#SBATCH --partition=hort503-02-f16
+#SBATCH --account=hort503-02-f16
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=8:00:00
+#SBATCH --job-name=sra_ds-%A_%a
+#SBATCH --output=logs/01-download_split.%a.log
+#SBATCH --array=0-31
+module add sratoolkit
+IDs=(`cat SRA_IDs.txt`)
+ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+
+done=`tail -n 1 ../GEM_single/logs/01-download_split.421136_0.out | grep -c "Written [0123456789]* spots for ${ID}"`
+
+if [ $done != 1 ]; then
+  mkdir -p ${ID}
+  cd $sample
+  fastq-dump --split-files ${ID}
+fi

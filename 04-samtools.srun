@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH --partition=hort503-02-f16
+#SBATCH --account=hort503-02-f16
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=8:00:00
+#SBATCH --job-name=samtools-%A_%a
+#SBATCH --output=logs/04-samtools.%a.log
+#SBATCH --array=0-31
+basename='all'
+module add samtools
+
+IDs=(`cat SRA_IDs.txt`)
+ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+sam_file="${ID}_vs_${basename}.sam"
+
+done=`tail -n 1 logs/04-samtools-sort.$SLURM_ARRAY_TASK_ID.out | grep -c "\[bam_sort_core\] merging from"`
+if [ $done != 1 ]; then
+  cd ${ID}
+  if [ -e $sam_file ]; then
+    samtools sort -o ${ID}_vs_${basename}.bam -O bam $sam_file > ../logs/04-samtools-sort.$SLURM_ARRAY_TASK_ID.out 2>&1
+    samtools index ${ID}_vs_${basename}.bam > ../logs/04-samtools-index.$SLURM_ARRAY_TASK_ID.out 2>&1
+  else 
+    echo "Warning: cannot find $sam_file"
+  fi
+else
+  echo "$ID Completed"
+fi

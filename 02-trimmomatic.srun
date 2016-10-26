@@ -1,0 +1,52 @@
+#!/bin/bash
+#SBATCH --partition=hort503-02-f16
+#SBATCH --account=hort503-02-f16
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=8:00:00
+#SBATCH --job-name=trimmomatic-%A_%a
+#SBATCH --output=logs/02-trimmomatic.%a.log
+#SBATCH --array=0-31
+
+IDs=(`cat SRA_IDs.txt`)
+ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+forward="${ID}_1.fastq"
+reverse="${ID}_2.fastq"
+
+done=`tail -n 1 logs/02-trimmomatic.$SLURM_ARRAY_TASK_ID.out | grep -c "Completed successfully"`
+if [ $done != 1 ]; then
+  cd ${ID}
+  if [ -e $reverse ]; then
+    java -Xmx512m \
+      -jar /data/hort503-02-f16/software/Trimmomatic-0.36/trimmomatic-0.36.jar \
+      PE \
+      -threads 1 \
+      -phred33 \
+      $forward \
+      $reverse \
+      ${ID}_1.trim.fastq \
+      ${ID}_1s.trim.fastq \
+      ${ID}_2.trim.fastq \
+      ${ID}_2s.trim.fastq \
+      ILLUMINACLIP:/data/hort503-02-f16/software/Trimmomatic-0.36/adapters/fasta_adapter.txt:2:40:15 \
+      LEADING:3 \
+      TRAILING:6 \
+      SLIDINGWINDOW:4:15 \
+      MINLEN:50 > ../logs/02-trimmomatic.$SLURM_ARRAY_TASK_ID.out 2>&1 
+  else 
+    java -Xmx512m \
+      -jar /data/hort503-02-f16/software/Trimmomatic-0.36/trimmomatic-0.36.jar \
+      SE \
+      -threads 1 \
+      -phred33 \
+      $forward \
+      ${ID}_1.trim.fastq \
+      ILLUMINACLIP:/data/hort503-02-f16/software/Trimmomatic-0.36/adapters/fasta_adapter.txt:2:40:15 \
+      LEADING:3 \
+      TRAILING:6 \
+      SLIDINGWINDOW:4:15 \
+      MINLEN:50 > ../logs/02-trimmomatic.$SLURM_ARRAY_TASK_ID.out 2>&1
+  fi
+else 
+  echo "$ID Completed"
+fi

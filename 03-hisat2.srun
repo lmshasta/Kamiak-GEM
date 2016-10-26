@@ -1,0 +1,51 @@
+#!/bin/bash
+#SBATCH --partition=hort503-02-f16
+#SBATCH --account=hort503-02-f16
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=8:00:00
+#SBATCH --job-name=hisat2-%A_%a
+#SBATCH --output=logs/03-hisat2.%a.log
+#SBATCH --array=0-31
+
+basename='all'
+module add hisat2
+
+IDs=(`cat SRA_IDs.txt`)
+ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+forward="${ID}_1.fastq"
+reverse="${ID}_2.fastq"
+
+done=`tail -n 1 logs/03-hisat2.${SLURM_ARRAY_TASK_ID}.out | grep -c "Overall time:"`
+if [ $done != 1 ]; then
+  cd ${ID}
+  splice_file=`ls ../reference/${basename}.Splice_Sites.txt`
+  export HISAT2_INDEXES=`pwd`/../reference
+  if [ -e $reverse ]; then
+    hisat2 \
+      -x ${basename} \
+      --no-temp-splicesite \
+      --known-splicesite-infile $splice_file \
+      -q \
+      -1 ${ID}_1.trim.fastq \
+      -2 ${ID}_2.trim.fastq \
+      -U ${ID}_1s.trim.fastq,${ID}_2s.trim.fastq \
+      -S ${ID}_vs_${basename}.sam \
+      -t \
+      -p 1 \
+      --dta-cufflinks > ../logs/03-hisat2.${SLURM_ARRAY_TASK_ID}.out 2>&1
+  else 
+    hisat2 \
+      -x ${basename} \
+      --no-temp-splicesite \
+      --known-splicesite-infile $splice_file \
+      -q \
+      -U ${ID}_1.trim.fastq \
+      -S ${ID}_vs_${basename}.sam \
+      -t \
+      -p 1 \
+      --dta-cufflinks > ../logs/03-hisat2.${SLURM_ARRAY_TASK_ID}.out 2>&1
+  fi
+else
+  echo "$ID Completed"
+fi

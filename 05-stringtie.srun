@@ -1,0 +1,28 @@
+#!/bin/bash
+#SBATCH --partition=hort503-02-f16
+#SBATCH --account=hort503-02-f16
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=8:00:00
+#SBATCH --job-name=stringtie-%A_%a
+#SBATCH --output=logs/05-stringtie.%a.log
+#SBATCH --array=0-31
+basename='all'
+module add stringtie
+
+IDs=(`cat SRA_IDs.txt`)
+ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+bam_file="${ID}_vs_${basename}.bam"
+gtf_file="../reference/${basename}.gtf"
+
+done=`tail -n 1 logs/05-stringtie.$SLURM_ARRAY_TASK_ID.out | grep -c "Fragment coverage length"`
+if [ $done != 1 ]; then
+  cd ${ID}
+  if [ -e $bam_file ]; then
+    stringtie -v -p 1 -e -G $gtf_file -o ${ID}_vs_${basename}.gtf -l ${ID} $bam_file  > ../logs/05-stringtie.$SLURM_ARRAY_TASK_ID.out 2>&1
+  else 
+    echo "Warning: cannot find $bam_file"
+  fi
+else 
+  echo "$ID Completed"
+fi

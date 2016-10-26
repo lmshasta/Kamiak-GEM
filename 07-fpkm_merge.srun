@@ -1,0 +1,10 @@
+#!/bin/bash
+#SBATCH --partition=hort503-02-f16
+#SBATCH --account=hort503-02-f16
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --time=2:00:00
+#SBATCH --job-name=fpkm-merge
+#SBATCH --output=logs/07-fpkm-merge.%a.log
+
+./fpkm2GEM.pl > GEM.txt
