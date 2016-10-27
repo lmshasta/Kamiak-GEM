@@ -7,4 +7,5 @@
 #SBATCH --job-name=fpkm-merge
 #SBATCH --output=logs/08-GEM_process.%a.log
 module load R
+echo 'options(bitmapType="cairo")' > ./.Rprofile
 Rscript ./GEM_process.R
