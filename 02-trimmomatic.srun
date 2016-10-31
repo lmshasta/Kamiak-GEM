@@ -16,7 +16,7 @@ reverse="${ID}_2.fastq"
 done=`tail -n 1 logs/02-trimmomatic.$SLURM_ARRAY_TASK_ID.out | grep -c "Completed successfully"`
 if [ $done != 1 ]; then
   cd ${ID}
-  if [ -e $reverse ]; then
+  if [ -e $reverse & -e $forward]; then
     java -Xmx512m \
       -jar /data/hort503-02-f16/software/Trimmomatic-0.36/trimmomatic-0.36.jar \
       PE \
@@ -33,7 +33,23 @@ if [ $done != 1 ]; then
       TRAILING:6 \
       SLIDINGWINDOW:4:15 \
       MINLEN:50 > ../logs/02-trimmomatic.$SLURM_ARRAY_TASK_ID.out 2>&1 
-  else 
+  elif [ -e $reverse ]; then
+    # For ease of the next steps, rename the reverse file to the forward.
+    # since these are non-paired it really shouldn't matter.
+    mv ${ID}_2.fastq ${ID}_1.fastq
+    java -Xmx512m \
+      -jar /data/hort503-02-f16/software/Trimmomatic-0.36/trimmomatic-0.36.jar \
+      SE \
+      -threads 1 \
+      -phred33 \
+      $forward \
+      ${ID}_1.trim.fastq \
+      ILLUMINACLIP:/data/hort503-02-f16/software/Trimmomatic-0.36/adapters/fasta_adapter.txt:2:40:15 \
+      LEADING:3 \
+      TRAILING:6 \ 
+      SLIDINGWINDOW:4:15 \ 
+      MINLEN:50 > ../logs/02-trimmomatic.$SLURM_ARRAY_TASK_ID.out 2>&1
+  elif [ -e $forward ]; then
     java -Xmx512m \
       -jar /data/hort503-02-f16/software/Trimmomatic-0.36/trimmomatic-0.36.jar \
       SE \
