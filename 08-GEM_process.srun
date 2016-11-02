@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=2:00:00
-#SBATCH --job-name=fpkm-merge
+#SBATCH --job-name=GEM_process
 #SBATCH --output=logs/08-GEM_process.%a.log
 module load R
 echo 'options(bitmapType="cairo")' > ./.Rprofile
