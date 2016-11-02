@@ -46,8 +46,8 @@ if [ $done != 1 ]; then
       ${ID}_1.trim.fastq \
       ILLUMINACLIP:/data/hort503-02-f16/software/Trimmomatic-0.36/adapters/fasta_adapter.txt:2:40:15 \
       LEADING:3 \
-      TRAILING:6 \ 
-      SLIDINGWINDOW:4:15 \ 
+      TRAILING:6 \
+      SLIDINGWINDOW:4:15 \
       MINLEN:50 > ../logs/02-trimmomatic.$SLURM_ARRAY_TASK_ID.out 2>&1
   elif [ -e $forward ]; then
     java -Xmx512m \
