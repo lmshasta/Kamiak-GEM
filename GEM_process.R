@@ -1,12 +1,16 @@
 # Read in and log transform the matrix
 ematrix = read.table('GEM.txt', header=TRUE, sep="\t", quote="")
-ematrix = log2(ematrix)
+samples = names(ematrix);
+ematrix = log2(as.matrix(ematrix))
 
 # Plot the samples
 png('GEM_density_before.png')
 colors <- rainbow(ncol(ematrix))
 plot(density(ematrix[,1], na.rm=TRUE), xlab="log count")
 for (i in 2:ncol(ematrix)) {
+  if (length(which(is.na(ematrix[,i]))) == nrow(ematrix)) {
+    next;
+  }
   lines(density(ematrix[,i], na.rm=TRUE), col=colors[i])
 }
 dev.off()
@@ -26,18 +30,22 @@ for (i in 2:ncol(ematrix)) {
 # Perform the KS test for each sample in the dataset:
 ks_test = numeric()
 for (i in 1:ncol(ematrix)) {
+  if (length(which(is.na(ematrix[,i]))) == nrow(ematrix)) {
+    ks_test[i] = 1;
+    next;
+  }
   ks_test[i] = ks.test(ematrix[, i], g)
 }
 
 # Convert results into a data frame:
-ksdf = data.frame(names(ematrix), unlist(ks_test))
+ksdf = data.frame(samples, unlist(ks_test))
 colnames(ksdf) = c('sample', 'ks_pvalue')
 row.names(ksdf) = c(1:ncol(ematrix))
 
 # Now that we have identified outliers we can use the following R code to remove them:
 ks_th = 0.15
 outliers = colnames(ematrix)[which(ksdf$ks_pvalue > ks_th)]
-ematno = ematrix[,!(names(ematrix) %in% outliers)]
+ematno = ematrix[,!(samples %in% outliers)]
 
 # Plot again those that remain to see if the distribution functions are comparable
 png('GEM_density_after.png')
