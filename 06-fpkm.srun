@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=hort503-02-f16
-#SBATCH --account=hort503-02-f16
+#SBATCH --partition=ficklin
+#SBATCH --account=ficklin
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
