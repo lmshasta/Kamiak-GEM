@@ -8,4 +8,4 @@
 #SBATCH --output=logs/08-GEM_process.%a.log
 module load R
 echo 'options(bitmapType="cairo")' > ./.Rprofile
-Rscript ./GEM_process.R
+Rscript ./scripts/GEM_process.R
