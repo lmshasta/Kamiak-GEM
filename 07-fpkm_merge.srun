@@ -7,4 +7,4 @@
 #SBATCH --job-name=fpkm-merge
 #SBATCH --output=logs/07-fpkm-merge.%a.log
 
-./fpkm2GEM.pl > GEM.txt
+./scripts/fpkm2GEM.pl > GEM.txt
