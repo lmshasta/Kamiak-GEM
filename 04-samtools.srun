@@ -6,7 +6,7 @@
 #SBATCH --time=8:00:00
 #SBATCH --job-name=samtools-%A_%a
 #SBATCH --output=logs/04-samtools.%a.log
-#SBATCH --array=0-31
+#SBATCH --array=238-474
 basename='all'
 module add samtools
 

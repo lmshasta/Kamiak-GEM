@@ -6,15 +6,15 @@
 #SBATCH --time=8:00:00
 #SBATCH --job-name=hisat2-%A_%a
 #SBATCH --output=logs/03-hisat2.%a.log
-#SBATCH --array=0-474
+#SBATCH --array=238-474
 
 basename='all'
 module add hisat2
 
 IDs=(`cat SRA_IDs.txt`)
 ID=${IDs[$SLURM_ARRAY_TASK_ID]}
-forward="${ID}_1.fastq"
-reverse="${ID}_2.fastq"
+forward="${ID}_1.trim.fastq"
+reverse="${ID}_2.trim.fastq"
 
 done=`tail -n 1 logs/03-hisat2.${SLURM_ARRAY_TASK_ID}.out | grep -c "Overall time:"`
 if [ $done != 1 ]; then

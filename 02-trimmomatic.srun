@@ -6,7 +6,7 @@
 #SBATCH --time=8:00:00
 #SBATCH --job-name=trimmomatic-%A_%a
 #SBATCH --output=logs/02-trimmomatic.%a.log
-#SBATCH --array=0-474
+#SBATCH --array=238-474
 
 IDs=(`cat SRA_IDs.txt`)
 ID=${IDs[$SLURM_ARRAY_TASK_ID]}
