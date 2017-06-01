@@ -12,6 +12,7 @@ for line in sra_file:
 
   # Get the current SRA ID.
   sra_id = line.strip()
+  print('Retreiving ' + sra_id)
   
   # Make sure our sample directory exists.
   if not os.path.exists(sra_id):
@@ -28,7 +29,7 @@ for line in sra_file:
   response_obj = urllib2.urlopen(fetch + query_id)
   response_xml = response_obj.read()
   response = xmltodict.parse(response_xml)
-  meta_file = open(sra_id + '/' + sra_id + '.json', 'w')
+  meta_file = open(sra_id + '/' + sra_id + '.sra.json', 'w')
   meta_file.write(json.dumps(response))
   meta_file.close()
 
