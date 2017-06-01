@@ -16,7 +16,8 @@ for json_file in json_files:
   json_data = open(json_file).read()
   data = json.loads(json_data)
   sample = data['EXPERIMENT_PACKAGE_SET']['EXPERIMENT_PACKAGE']['SAMPLE']
-  accession = sample['@accession'];
+  run_set = data['EXPERIMENT_PACKAGE_SET']['EXPERIMENT_PACKAGE']['RUN_SET']['RUN']
+  accession = run_set['@accession']
   attributes = sample['SAMPLE_ATTRIBUTES']['SAMPLE_ATTRIBUTE']
   treatment = ''
   time = ''
