@@ -6,12 +6,13 @@
 #SBATCH --time=8:00:00
 #SBATCH --job-name=samtools-%A_%a
 #SBATCH --output=logs/04-samtools.%a.log
-#SBATCH --array=238-474
+#SBATCH --array=0-999
+factor=0
 basename='all'
 module add samtools
 
 IDs=(`cat SRA_IDs.txt`)
-ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+ID=${IDs[$SLURM_ARRAY_TASK_ID + $factor]}
 sam_file="${ID}_vs_${basename}.sam"
 
 done=`tail -n 1 logs/04-samtools-sort.$SLURM_ARRAY_TASK_ID.out | grep -c "\[bam_sort_core\] merging from"`

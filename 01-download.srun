@@ -6,10 +6,11 @@
 #SBATCH --time=8:00:00
 #SBATCH --job-name=sra_ds-%A_%a
 #SBATCH --output=logs/01-download.%a.log
-#SBATCH --array=238-474
+#SBATCH --array=0-999
+factor=0
 module add sratoolkit
 IDs=(`cat SRA_IDs.txt`)
-ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+ID=${IDs[$SLURM_ARRAY_TASK_ID + $factor]}
 
 done=`tail -n 1 logs/01-download.$SLURM_ARRAY_TASK_ID.out | grep -c "Written [0123456789]* spots for ${ID}"`
 if [ $done != 1 ]; then

@@ -6,12 +6,13 @@
 #SBATCH --time=8:00:00
 #SBATCH --job-name=stringtie-%A_%a
 #SBATCH --output=logs/05-stringtie.%a.log
-#SBATCH --array=238-474
+#SBATCH --array=0-999
+factor=0
 basename='all'
 module add stringtie
 
 IDs=(`cat SRA_IDs.txt`)
-ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+ID=${IDs[$SLURM_ARRAY_TASK_ID + $factor]}
 bam_file="${ID}_vs_${basename}.bam"
 gtf_file="../reference/${basename}.gtf"
 

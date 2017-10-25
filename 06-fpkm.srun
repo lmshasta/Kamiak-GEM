@@ -6,11 +6,11 @@
 #SBATCH --time=8:00:00
 #SBATCH --job-name=fpkm-%A_%a
 #SBATCH --output=logs/06-fpkm.%a.log
-#SBATCH --array=238-474
-
+#SBATCH --array=0-999
+factor=0
 basename='all'
 IDs=(`cat SRA_IDs.txt`)
-ID=${IDs[$SLURM_ARRAY_TASK_ID]}
+ID=${IDs[$SLURM_ARRAY_TASK_ID + $factor]}
 
 last=`tail -n 1 $ID/${ID}_vs_${basename}.gtf | perl -pi -e 's/.*transcript_id "(.*?)";.*/\1/'`
 done=`tail -n 1 $ID/${ID}_vs_${basename}.fpkm | grep -c $last`
