@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
-#SBATCH --job-name=hisat2-%A_%a
+#SBATCH --job-name=KGEM03
 #SBATCH --output=logs/03-hisat2.%a.log
 #SBATCH --array=0-999
 factor=0

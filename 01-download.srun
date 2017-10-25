@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
-#SBATCH --job-name=sra_ds-%A_%a
+#SBATCH --job-name=KGEM01
 #SBATCH --output=logs/01-download.%a.log
 #SBATCH --array=0-999
 factor=0

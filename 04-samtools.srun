@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
-#SBATCH --job-name=samtools-%A_%a
+#SBATCH --job-name=KGEM04
 #SBATCH --output=logs/04-samtools.%a.log
 #SBATCH --array=0-999
 factor=0

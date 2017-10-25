@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
-#SBATCH --job-name=trimmomatic-%A_%a
+#SBATCH --job-name=KGEM02
 #SBATCH --output=logs/02-trimmomatic.%a.log
 #SBATCH --array=0-999
 factor=0
