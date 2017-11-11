@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
 #SBATCH --job-name=aaKGEM06
-#SBATCH --output=logs/06-fpkm.%a.log
+#SBATCH --output=logs/06-fpkm_prok.%a.log
 #SBATCH --array=0-75
 factor=0
 basename='A_v_DJ'
@@ -16,11 +16,8 @@ last=`tail -n 1 $ID/${ID}_vs_${basename}.gtf | perl -pi -e 's/.*transcript_id "(
 done=`tail -n 1 $ID/${ID}_vs_${basename}.fpkm | grep -c $last`
 if [ $done != 1 ]; then
   cd ${ID}
-  if [ -e ${ID}_vs_${basename}.gtf ]; then
-    cat ${ID}_vs_${basename}.gtf | awk -F"\t" '{if ($3 == "transcript") print $0}' | perl -p -e 's/^.*?transcript_id "(.*?)";.*FPKM "(.*?)";.*$/$1\t$2/' > ${ID}_vs_${basename}.fpkm
-  else 
-    echo "Warning: cannot find ${ID}_vs_${basename}.gtf"
-  fi
+  module load R
+  Rscript --vanilla ../scripts/getFPKM_prok.R ${ID}_vs_${basename}
 else
   echo "$ID Completed"
 fi

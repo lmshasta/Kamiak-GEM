@@ -4,9 +4,9 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
-#SBATCH --job-name=KGEM01
+#SBATCH --job-name=aaKGEM01
 #SBATCH --output=logs/01-download.%a.log
-#SBATCH --array=0-999
+#SBATCH --array=0-75
 factor=0
 module add sratoolkit
 IDs=(`cat SRA_IDs.txt`)

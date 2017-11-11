@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=2:00:00
-#SBATCH --job-name=KGEM07
+#SBATCH --job-name=aaKGEM07
 #SBATCH --output=logs/07-fpkm-merge.%a.log
 
 ./scripts/fpkm2GEM.pl > GEM.txt

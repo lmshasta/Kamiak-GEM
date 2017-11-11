@@ -4,11 +4,11 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
-#SBATCH --job-name=KGEM04
+#SBATCH --job-name=aaKGEM04
 #SBATCH --output=logs/04-samtools.%a.log
-#SBATCH --array=0-999
+#SBATCH --array=0-75
 factor=0
-basename='all'
+basename='A_v_DJ'
 module add samtools
 
 IDs=(`cat SRA_IDs.txt`)

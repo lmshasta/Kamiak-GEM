@@ -5,22 +5,22 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
 #SBATCH --job-name=aaKGEM05
-#SBATCH --output=logs/05-stringtie.%a.log
+#SBATCH --output=logs/05-featureCount_prok.%a.log
 #SBATCH --array=0-75
 factor=0
 basename='A_v_DJ'
-module add stringtie
+module add subread
 
 IDs=(`cat SRA_IDs.txt`)
 ID=${IDs[$SLURM_ARRAY_TASK_ID + $factor]}
 bam_file="${ID}_vs_${basename}.bam"
 gtf_file="../reference/${basename}.gtf"
 
-done=`tail -n 1 logs/05-stringtie.$SLURM_ARRAY_TASK_ID.out | grep -c "Fragment coverage length"`
+done=`grep -c "Read assignment finished" logs/05-featureCount_prok.$SLURM_ARRAY_TASK_ID.out`
 if [ $done != 1 ]; then
   cd ${ID}
   if [ -e $bam_file ]; then
-    stringtie -v -p 1 -e -G $gtf_file -o ${ID}_vs_${basename}.gtf -l ${ID} $bam_file  > ../logs/05-stringtie.$SLURM_ARRAY_TASK_ID.out 2>&1
+    featureCounts -p -O -a $gtf_file -o ${ID}_vs_${basename}.counts $bam_file > ../logs/05-featureCount_prok.$SLURM_ARRAY_TASK_ID.out 2>&1
   else 
     echo "Warning: cannot find $bam_file"
   fi

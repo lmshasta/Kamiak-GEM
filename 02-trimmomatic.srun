@@ -4,9 +4,9 @@
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --time=8:00:00
-#SBATCH --job-name=KGEM02
+#SBATCH --job-name=aaKGEM02
 #SBATCH --output=logs/02-trimmomatic.%a.log
-#SBATCH --array=0-999
+#SBATCH --array=0-75
 factor=0
 IDs=(`cat SRA_IDs.txt`)
 ID=${IDs[$SLURM_ARRAY_TASK_ID + $factor]}
